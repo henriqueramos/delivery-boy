@@ -33,5 +33,14 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
+    },
+    "scripts": {
+        "phpcs": [
+          "@php vendor/bin/phpcs --extensions=php --encoding=utf-8 --tab-width=4 -sp src",
+          "@php vendor/bin/phpcs --extensions=php --encoding=utf-8 --tab-width=4 -sp tests"
+        ],
+        "test": [
+          "@php vendor/bin/phpunit"
+        ]
     }
 }
