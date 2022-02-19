@@ -1,0 +1,21 @@
+{
+    "name": "henriqueramos/delivery-boy",
+    "description": "Delivery Boy software. Handling your packages across the entire web",
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "HenriqueRamos\\DeliveryBoy\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Henrique Ramos",
+            "email": "henrique@henriqueramos.eti.br"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=8.0"
+    }
+}
