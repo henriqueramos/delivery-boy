@@ -17,8 +17,9 @@ use HenriqueRamos\DeliveryBoy\Enums\{
 use HenriqueRamos\DeliveryBoy\Objects\{
     Address,
     Order,
-    ProductsBag,
     Product,
+    ProductsBag,
+    SenderAddress,
     Shipping,
 };
 use HenriqueRamosTests\TestCase;
@@ -198,7 +199,7 @@ final class OrderTest extends TestCase
 
     protected function getConsignorAddress(string $name): Address
     {
-        return new Address([
+        return new SenderAddress([
             'Name' => $name,
             'AddressLine1' => 'Walnut Street',
             'AddressLine2' => 'Moe\'s Tavern',

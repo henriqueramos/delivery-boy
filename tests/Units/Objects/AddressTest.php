@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace HenriqueRamosTests\Units\Objects;
 
-use HenriqueRamos\DeliveryBoy\Objects\Address;
+use HenriqueRamos\DeliveryBoy\Objects\{
+    Address,
+    SenderAddress
+};
 use HenriqueRamosTests\TestCase;
 
 final class AddressTest extends TestCase
@@ -44,7 +47,7 @@ final class AddressTest extends TestCase
 
     public function testAddressWithEoriData(): void
     {
-        $address = new Address([
+        $address = new SenderAddress([
             'Name' => 'Homer J. Simpson',
             'AddressLine1' => '742 Evergreen Terrace',
             'AddressLine2' => 'Residential Zone',
