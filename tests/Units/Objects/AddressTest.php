@@ -42,6 +42,41 @@ final class AddressTest extends TestCase
         $this->assertArraySubset($expected, $actual);
     }
 
+    public function testAddressWithEoriData(): void
+    {
+        $address = new Address([
+            'Name' => 'Homer J. Simpson',
+            'AddressLine1' => '742 Evergreen Terrace',
+            'AddressLine2' => 'Residential Zone',
+            'City' => 'Springfield',
+            'State' => 'MO',
+            'Country' => 'US',
+            'Zip' => '65619',
+            'Phone' => '(939)-555-0113',
+            'Email' => 'homer.da.best.simpson@springfieldnuclearpowerplant.test',
+            'Eori' => 'GB205672212000',
+        ]);
+
+        $actual = $address->toArray();
+
+        $expected = [
+            'Name' => 'Homer J. Simpson',
+            'AddressLine1' => '742 Evergreen Terrace',
+            'AddressLine2' => 'Residential Zone',
+            'AddressLine3' => null,
+            'City' => 'Springfield',
+            'State' => 'MO',
+            'Country' => 'US',
+            'Zip' => '65619',
+            'Phone' => '(939)-555-0113',
+            'Email' => 'homer.da.best.simpson@springfieldnuclearpowerplant.test',
+            'Vat' => null,
+            'Eori' => 'GB205672212000',
+        ];
+
+        $this->assertArraySubset($expected, $actual);
+    }
+
     public function testAddressWithEmptyInput(): void
     {
         $address = new Address([]);

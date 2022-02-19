@@ -15,6 +15,7 @@ final class Address extends Hydrate
     protected $company = null;
     protected $country = null;
     protected $email = null;
+    protected $eori = null;
     protected $name = null;
     protected $phone = null;
     protected $state = null;
@@ -23,7 +24,7 @@ final class Address extends Hydrate
 
     public function toArray(): array
     {
-        return [
+        $data = [
             'AddressLine1' => $this->getAddressLine1(),
             'AddressLine2' => $this->getAddressLine2(),
             'AddressLine3' => $this->getAddressLine3(),
@@ -37,6 +38,12 @@ final class Address extends Hydrate
             'Vat' => $this->getVat(),
             'Zip' => $this->getZip(),
         ];
+
+        if ($this->getEori() !== null) {
+            $data['Eori'] = $this->getEori();
+        }
+
+        return $data;
     }
 
     public function getAddressLine1(): ?string
@@ -119,6 +126,18 @@ final class Address extends Hydrate
     public function setEmail(?string $email = null): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getEori(): ?string
+    {
+        return $this->eori;
+    }
+
+    public function setEori(?string $eori = null): self
+    {
+        $this->eori = $eori;
 
         return $this;
     }

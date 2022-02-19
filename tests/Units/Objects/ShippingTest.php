@@ -31,6 +31,7 @@ final class ShippingTest extends TestCase
             'Length' => '20',
             'Service' => ShippingServices::PPTT,
             'ShipperReference' => 'Reference_001',
+            'Source' => 'NotDeliveryBoy',
             'Value' => '500',
             'Weight' => '200',
             'WeightUnit' => WeightUnits::KG,
@@ -56,6 +57,7 @@ final class ShippingTest extends TestCase
             'Weight' => '200',
             'WeightUnit' => WeightUnits::KG->value,
             'Width' => '30',
+            'Source' => 'NotDeliveryBoy',
         ];
 
         $this->assertArraySubset($expected, $actual);
@@ -87,6 +89,7 @@ final class ShippingTest extends TestCase
             'Weight' => null,
             'WeightUnit' => WeightUnits::KG->value,
             'Width' => null,
+            'Source' => Shipping::SOURCE_DEFAULT
         ];
 
         $this->assertEquals($expected, $actual);

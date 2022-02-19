@@ -17,6 +17,8 @@ use HenriqueRamos\DeliveryBoy\Support\Abstracts\Hydrate;
 
 final class Shipping extends Hydrate
 {
+    public const SOURCE_DEFAULT = 'DeliveryBoy';
+
     protected $consigneeAddress = null;
     protected $consignorAddress = null;
     protected $currency = Currency::EURO;
@@ -32,6 +34,7 @@ final class Shipping extends Hydrate
     protected $products = null;
     protected $service = null;
     protected $shipperReference = null;
+    protected $source = self::SOURCE_DEFAULT;
     protected $value = null;
     protected $weight = null;
     protected $weightUnit = WeightUnits::KG;
@@ -55,6 +58,7 @@ final class Shipping extends Hydrate
             'Products' => null,
             'Service' => $this->getService(),
             'ShipperReference' => $this->getShipperReference(),
+            'Source' => $this->getSource(),
             'Value' => $this->getValue(),
             'Weight' => $this->getWeight(),
             'WeightUnit' => $this->getWeightUnit(),
@@ -280,6 +284,18 @@ final class Shipping extends Hydrate
     public function setShipperReference(?string $shipperReference = null): self
     {
         $this->shipperReference = $shipperReference;
+
+        return $this;
+    }
+
+    public function getSource(): ?string
+    {
+        return $this->source;
+    }
+
+    public function setSource(?string $source = null): self
+    {
+        $this->source = $source;
 
         return $this;
     }
