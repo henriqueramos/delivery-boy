@@ -5,7 +5,7 @@
     beStrictAboutOutputDuringTests="true"
     backupGlobals="false"
     backupStaticAttributes="false"
-    bootstrap="phpunit-bootstrap.php"
+    bootstrap="./vendor/autoload.php"
     colors="true"
     convertErrorsToExceptions="true"
     convertNoticesToExceptions="true"
