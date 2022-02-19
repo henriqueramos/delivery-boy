@@ -35,8 +35,4 @@ enum ShippingServices: string
     case SCSTS = "SCSTS"; // Spring Com Standard - Sign
     case SCEX = "SCEX"; // Spring Com Express - No sign
     case SCEXS = "SCEXS"; // Spring Com Express - Sign
-    case PPND = "PPND"; // PostNL Parcel Benelux - No sign
-    case PPNDS = "PPNDS"; // PostNL Parcel Benelux - Sign
-    case PPHD = "PPHD"; // PostNL Parcel Benelux - No sign, no neighbor
-    case PPHDS = "PPHDS"; // PostNL Parcel Benelux - Sign, no neighbor
 }

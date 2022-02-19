@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace HenriqueRamosTests\Units;
+namespace HenriqueRamosTests\Units\Objects;
 
 use HenriqueRamos\DeliveryBoy\Objects\Address;
 use HenriqueRamosTests\TestCase;
 
-final class AddressObjectTest extends TestCase
+final class AddressTest extends TestCase
 {
     public function testAddressWithBasicData(): void
     {
@@ -25,17 +25,21 @@ final class AddressObjectTest extends TestCase
 
         $actual = $address->toArray();
 
-        $this->assertArraySubset(['Name' => 'Homer J. Simpson'], $actual);
-        $this->assertArraySubset(['AddressLine1' => '742 Evergreen Terrace'], $actual);
-        $this->assertArraySubset(['AddressLine2' => 'Residential Zone'], $actual);
-        $this->assertArraySubset(['AddressLine3' => null], $actual);
-        $this->assertArraySubset(['City' => 'Springfield'], $actual);
-        $this->assertArraySubset(['State' => 'MO'], $actual);
-        $this->assertArraySubset(['Country' => 'US'], $actual);
-        $this->assertArraySubset(['Zip' => '65619'], $actual);
-        $this->assertArraySubset(['Phone' => '(939)-555-0113'], $actual);
-        $this->assertArraySubset(['Email' => 'homer.da.best.simpson@springfieldnuclearpowerplant.test'], $actual);
-        $this->assertArraySubset(['Vat' => null], $actual);
+        $expected = [
+            'Name' => 'Homer J. Simpson',
+            'AddressLine1' => '742 Evergreen Terrace',
+            'AddressLine2' => 'Residential Zone',
+            'AddressLine3' => null,
+            'City' => 'Springfield',
+            'State' => 'MO',
+            'Country' => 'US',
+            'Zip' => '65619',
+            'Phone' => '(939)-555-0113',
+            'Email' => 'homer.da.best.simpson@springfieldnuclearpowerplant.test',
+            'Vat' => null,
+        ];
+
+        $this->assertArraySubset($expected, $actual);
     }
 
     public function testAddressWithEmptyInput(): void

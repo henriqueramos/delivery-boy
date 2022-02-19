@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace HenriqueRamosTests\Units;
+namespace HenriqueRamosTests\Units\Objects;
 
 use HenriqueRamos\DeliveryBoy\Objects\Product;
 use HenriqueRamosTests\TestCase;
 
-final class ProductObjectTest extends TestCase
+final class ProductTest extends TestCase
 {
     public function testProductObjectTestWithBasicData(): void
     {
