@@ -67,6 +67,9 @@ final class ShippingTest extends TestCase
 
         $actual = $product->toArray();
         $expected = [
+            'ConsigneeAddress' => null,
+            'ConsignorAddress' => null,
+            'ConsignorAddress' => null,
             'Currency' => Currency::EURO->value,
             'CustomsDuty' => CustomsDuties::DDU->value,
             'DeclarationType' => ShippingDeclarationType::SALE_OF_GOODS->value,
@@ -77,6 +80,7 @@ final class ShippingTest extends TestCase
             'InvoiceNumber' => null,
             'LabelFormat' => LabelFormats::PDF->value,
             'Length' => null,
+            'Products' => null,
             'Service' => null,
             'ShipperReference' => null,
             'Value' => null,

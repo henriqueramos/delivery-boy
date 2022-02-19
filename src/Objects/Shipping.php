@@ -17,6 +17,8 @@ use HenriqueRamos\DeliveryBoy\Support\Abstracts\Hydrate;
 
 final class Shipping extends Hydrate
 {
+    protected $consigneeAddress = null;
+    protected $consignorAddress = null;
     protected $currency = Currency::EURO;
     protected $customsDuty = CustomsDuties::DDU;
     protected $declarationType = ShippingDeclarationType::SALE_OF_GOODS;
@@ -27,6 +29,7 @@ final class Shipping extends Hydrate
     protected $invoiceNumber = null;
     protected $labelFormat = LabelFormats::PDF;
     protected $length = null;
+    protected $products = null;
     protected $service = null;
     protected $shipperReference = null;
     protected $value = null;
@@ -36,7 +39,9 @@ final class Shipping extends Hydrate
 
     public function toArray(): array
     {
-        return [
+        $data = [
+            'ConsigneeAddress' => $this->getConsignorAddress(),
+            'ConsignorAddress' => $this->getConsigneeAddress(),
             'Currency' => $this->getCurrency(),
             'CustomsDuty' => $this->getCustomsDuty(),
             'DeclarationType' => $this->getDeclarationType(),
@@ -47,6 +52,7 @@ final class Shipping extends Hydrate
             'InvoiceNumber' => $this->getInvoiceNumber(),
             'LabelFormat' => $this->getLabelFormat(),
             'Length' => $this->getLength(),
+            'Products' => null,
             'Service' => $this->getService(),
             'ShipperReference' => $this->getShipperReference(),
             'Value' => $this->getValue(),
@@ -54,6 +60,47 @@ final class Shipping extends Hydrate
             'WeightUnit' => $this->getWeightUnit(),
             'Width' => $this->getWidth(),
         ];
+
+        if ($this->getConsignorAddress() instanceof Address) {
+            $data['ConsignorAddress'] = $this->getConsignorAddress()
+                ->toArray();
+        }
+
+        if ($this->getConsigneeAddress() instanceof Address) {
+            $data['ConsigneeAddress'] = $this->getConsigneeAddress()
+                ->toArray();
+        }
+
+        if ($this->getProducts() instanceof ProductsBag) {
+            $data['Products'] = $this->getProducts()
+                ->toArray();
+        }
+
+        return $data;
+    }
+
+    public function getConsignorAddress(): ?Address
+    {
+        return $this->consignorAddress;
+    }
+
+    public function setConsignorAddress(?Address $consignorAddress = null): self
+    {
+        $this->consignorAddress = $consignorAddress;
+
+        return $this;
+    }
+
+    public function getConsigneeAddress(): ?Address
+    {
+        return $this->consigneeAddress;
+    }
+
+    public function setConsigneeAddress(?Address $consigneeAddress = null): self
+    {
+        $this->consigneeAddress = $consigneeAddress;
+
+        return $this;
     }
 
     public function getCurrency(): ?string
@@ -193,6 +240,18 @@ final class Shipping extends Hydrate
     public function setLength(?string $length = null): self
     {
         $this->length = $length;
+
+        return $this;
+    }
+
+    public function getProducts(): ?ProductsBag
+    {
+        return $this->products;
+    }
+
+    public function setProducts(?ProductsBag $products = null): self
+    {
+        $this->products = $products;
 
         return $this;
     }
