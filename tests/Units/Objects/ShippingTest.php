@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace HenriqueRamosTests\Units\Objects;
 
-use HenriqueRamos\DeliveryBoy\Enums\Currency;
-use HenriqueRamos\DeliveryBoy\Enums\CustomsDuties;
-use HenriqueRamos\DeliveryBoy\Enums\DimUnits;
-use HenriqueRamos\DeliveryBoy\Enums\LabelFormats;
-use HenriqueRamos\DeliveryBoy\Enums\ShippingDeclarationType;
-use HenriqueRamos\DeliveryBoy\Enums\ShippingServices;
-use HenriqueRamos\DeliveryBoy\Enums\WeightUnits;
+use HenriqueRamos\DeliveryBoy\Enums\{
+    Currency,
+    CustomsDuties,
+    DimUnits,
+    LabelFormats,
+    ShippingDeclarationType,
+    ShippingServices,
+    WeightUnits,
+};
 use HenriqueRamos\DeliveryBoy\Objects\Shipping;
 use HenriqueRamosTests\TestCase;
 
 final class ShippingTest extends TestCase
 {
-    public function testProductObjectTestWithBasicData(): void
+    public function testShippingObjectTestWithBasicData(): void
     {
-        $product = new Shipping([
+        $shipping = new Shipping([
             'Currency' => Currency::BRAZILIAN_REAL,
             'CustomsDuty' => CustomsDuties::DDP,
             'DeclarationType' => ShippingDeclarationType::GIFT,
@@ -38,7 +40,7 @@ final class ShippingTest extends TestCase
             'Width' => '30',
         ]);
 
-        $actual = $product->toArray();
+        $actual = $shipping->toArray();
 
         $expected = [
             'Currency' => Currency::BRAZILIAN_REAL->value,
@@ -63,14 +65,13 @@ final class ShippingTest extends TestCase
         $this->assertArraySubset($expected, $actual);
     }
 
-    public function testProductWithEmptyInput(): void
+    public function testShippingWithEmptyInput(): void
     {
-        $product = new Shipping([]);
+        $shipping = new Shipping([]);
 
-        $actual = $product->toArray();
+        $actual = $shipping->toArray();
         $expected = [
             'ConsigneeAddress' => null,
-            'ConsignorAddress' => null,
             'ConsignorAddress' => null,
             'Currency' => Currency::EURO->value,
             'CustomsDuty' => CustomsDuties::DDU->value,

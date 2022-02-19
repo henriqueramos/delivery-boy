@@ -37,6 +37,19 @@ final class ProductsBag extends Hydrate implements Enumerable
         return $this->products;
     }
 
+    public function setProducts(?array $products = null): self
+    {
+        if (is_array($products) && count($products) > 0) {
+            foreach ($products as $product) {
+                $this->addProduct($product);
+            }
+
+            return $this;
+        }
+
+        return $this->clearProducts();
+    }
+
     public function clearProducts(): self
     {
         $this->products = [];
