@@ -5,44 +5,33 @@ declare(strict_types=1);
 namespace HenriqueRamos\DeliveryBoy\Services;
 
 use CurlHandle;
+use HenriqueRamos\DeliveryBoy\Support\Http\Client;
+use InvalidArgumentException;
 
 final class Spring
 {
+    protected $client = null;
     protected $payload = null;
     protected $uri = null;
 
-    protected function prepareRequest(): CurlHandle
+    public function __construct()
     {
-        $request = curl_init();
-        curl_setopt(
-            $request,
-            CURLOPT_HTTPHEADER,
-            ['Content-Type: application/json']
-        );
-        curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($request, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+        if (($apiUri = getenv('API_URL')) === false) {
+            throw new InvalidArgumentException('fill.API_URL.env');
+        }
 
-        return $request;
+        $this->setUri($apiUri);
+        $this->client = new Client($this->getUri());
     }
 
-    protected function sendRequest(CurlHandle $request): array
+    public function post(): array
     {
-        $error = curl_error($request);
-        $httpCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
-        $output = curl_exec($request);
-
-        return [];
-    }
-
-    public function post(array $data = []): array
-    {
-        $request = $this->prepareRequest();
+        $request = $this->client->prepareRequest();
 
         curl_setopt($request, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($request, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($request, CURLOPT_POSTFIELDS, $this->getPayload());
 
-        $result = $this->sendRequest($request);
+        $result = $this->client->doRequest($request);
 
         return $result;
     }
