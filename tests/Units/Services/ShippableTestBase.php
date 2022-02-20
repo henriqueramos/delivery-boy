@@ -101,6 +101,21 @@ class ShippableTestBase extends TestCase
         ]);
     }
 
+    protected function getUSAConsigneeAddressFixture(): Address
+    {
+        return new Address([
+            'Name' => 'Bart Simpson',
+            'AddressLine1' => '742 Evergreen Terrace',
+            'AddressLine2' => 'Residential Zone',
+            'City' => 'Springfield',
+            'State' => 'MO',
+            'Country' => 'US',
+            'Zip' => '65619',
+            'Phone' => '(939)-555-0113',
+            'Email' => 'bart.eat.my.shorts@springfieldelementaryschool.test',
+        ]);
+    }
+
     protected function getItalyConsigneeAddressFixture(): Address
     {
         return new Address([

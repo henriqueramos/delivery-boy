@@ -15,6 +15,7 @@ use HenriqueRamos\DeliveryBoy\Validators\{
     PPTRNTValidator,
     PPTTValidator,
     RM2448SValidator,
+    SCSTSEXSValidator,
     SENDSValidator,
 };
 
@@ -41,6 +42,10 @@ class ShippableValidator
             ShippingServices::SEND2->value => new SENDSValidator(),
             ShippingServices::ITCR->value => new ITCRValidator(),
             ShippingServices::HEHDS->value => new HEHDSValidator(),
+            ShippingServices::SCST->value => new SCSTSEXSValidator(),
+            ShippingServices::SCSTS->value => new SCSTSEXSValidator(),
+            ShippingServices::SCEX->value => new SCSTSEXSValidator(),
+            ShippingServices::SCEXS->value => new SCSTSEXSValidator(),
             default => throw new InvalidArgumentException(self::CANNOT_FIND_VALIDATOR_FOR_SHIPPABLE),
         };
 
