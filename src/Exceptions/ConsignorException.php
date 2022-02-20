@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace HenriqueRamos\DeliveryBoy\Exceptions;
 
-use Exception;
 use Throwable;
 
-class ConsignorException extends Exception
+class ConsignorException extends ValidatorException
 {
     public const PREFIX = 'consignorAddress';
 

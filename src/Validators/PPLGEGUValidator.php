@@ -26,7 +26,7 @@ use HenriqueRamos\DeliveryBoy\Support\Traits\{
     StateValidator
 };
 
-class PPLEUValidator extends ShippingValidatorHandler implements CountryListValidator, StateListValidator
+class PPLGEGUValidator extends ShippingValidatorHandler implements CountryListValidator, StateListValidator
 {
     use CountryValidator;
     use StateValidator;
@@ -34,9 +34,9 @@ class PPLEUValidator extends ShippingValidatorHandler implements CountryListVali
     protected $object;
 
     public const INVALID_ADDRESS_OBJECT = 'address.is.not.a.valid.type.object';
+    public const EXCEEDED_CONSIGNOR_COMPANY_NAME_SIZE = 'company.should.have.less.or.equal.than.60.characters';
     public const EXCEEDED_COMPANY_NAME_SIZE = 'company.should.have.less.or.equal.than.30.characters';
-    public const EXCEEDED_CONSIGNEE_COMPANY_NAME_SIZE = 'company.should.have.less.or.equal.than.35.characters';
-    public const EXCEEDED_ADDRESS_NAME_SIZE = 'name.should.have.less.or.equal.than.30.characters';
+    public const EXCEEDED_ADDRESS_NAME_SIZE = 'name.should.have.less.or.equal.than.50.characters';
     public const EXCEEDED_ADDRESSLINE1_SIZE = 'addressLine1.should.have.less.or.equal.than.35.characters';
     public const EXCEEDED_ADDRESSLINE2_SIZE = 'addressLine2.should.have.less.or.equal.than.35.characters';
     public const EXCEEDED_ADDRESSLINE3_SIZE = 'addressLine3.should.have.less.or.equal.than.35.characters';
@@ -48,6 +48,8 @@ class PPLEUValidator extends ShippingValidatorHandler implements CountryListVali
     public const EXCEEDED_WEIGHT = 'exceeded.weight';
     public const INVALID_DISPLAY_ID = 'displayId.should.have.less.or.equal.than.15.characters';
     public const INVALID_PHONE = 'address.phone.should.have.less.or.equal.than.15.characters';
+    public const PRODUCT_EXCEEDED_DESCRIPTION_SIZE = 'description.should.have.less.or.equal.than.105.characteres';
+    public const PRODUCT_EXCEEDED_HSCODE_SIZE = 'hs_code.should.have.less.or.equal.than.6.characteres';
 
     public function handle(Shippable $object): ?Shippable
     {
@@ -56,6 +58,7 @@ class PPLEUValidator extends ShippingValidatorHandler implements CountryListVali
         $this->validateConsignorData();
         $this->validateConsigneeData();
         $this->validateWeight();
+        $this->validateProducts();
 
         $this->assert(
             strlen((string) $this->object->getDisplayId()) > 15,
@@ -67,32 +70,7 @@ class PPLEUValidator extends ShippingValidatorHandler implements CountryListVali
 
     public function availableCountriesList(): array
     {
-        return [
-            'AT' => 1,
-            'BE' => 1,
-            'BG' => 1,
-            'HR' => 1,
-            'CY' => 1,
-            'CZ' => 1,
-            'DK' => 1,
-            'EE' => 1,
-            'FI' => 1,
-            'FR' => 1,
-            'DE' => 1,
-            'GR' => 1,
-            'HU' => 1,
-            'IE' => 1,
-            'LV' => 1,
-            'LT' => 1,
-            'LU' => 1,
-            'MT' => 1,
-            'NL' => 1,
-            'PL' => 1,
-            'RO' => 1,
-            'SK' => 1,
-            'SI' => 1,
-            'SE' => 1,
-        ];
+        return [];
     }
 
     protected function validateConsignorData(): void
@@ -105,37 +83,37 @@ class PPLEUValidator extends ShippingValidatorHandler implements CountryListVali
         $address = $this->object->getConsignorAddress();
 
         $this->assert(
-            strlen((string) $address->getCompany()) > 30,
-            new ConsignorException(self::EXCEEDED_COMPANY_NAME_SIZE)
+            strlen((string) $address->getCompany()) > 60,
+            new ConsignorException(self::EXCEEDED_CONSIGNOR_COMPANY_NAME_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getName()) > 35,
+            strlen((string) $address->getName()) > 50,
             new ConsignorException(self::EXCEEDED_ADDRESS_NAME_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getAddressLine1()) > 35,
+            strlen((string) $address->getAddressLine1()) > 50,
             new ConsignorException(self::EXCEEDED_ADDRESSLINE1_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getAddressLine2()) > 35,
+            strlen((string) $address->getAddressLine2()) > 50,
             new ConsignorException(self::EXCEEDED_ADDRESSLINE2_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getAddressLine3()) > 35,
+            strlen((string) $address->getAddressLine3()) > 50,
             new ConsignorException(self::EXCEEDED_ADDRESSLINE3_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getCity()) > 35,
+            strlen((string) $address->getCity()) > 50,
             new ConsignorException(self::EXCEEDED_CITY_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getState()) > 35,
+            strlen((string) $address->getState()) > 50,
             new ConsignorException(self::EXCEEDED_STATE_SIZE)
         );
 
@@ -168,48 +146,43 @@ class PPLEUValidator extends ShippingValidatorHandler implements CountryListVali
         $address = $this->object->getConsigneeAddress();
 
         $this->assert(
-            strlen((string) $address->getCompany()) > 35,
-            new ConsigneeException(self::EXCEEDED_CONSIGNEE_COMPANY_NAME_SIZE)
+            strlen((string) $address->getCompany()) > 30,
+            new ConsigneeException(self::EXCEEDED_COMPANY_NAME_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getName()) > 35,
+            strlen((string) $address->getName()) > 50,
             new ConsigneeException(self::EXCEEDED_ADDRESS_NAME_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getAddressLine1()) > 35,
+            strlen((string) $address->getAddressLine1()) > 50,
             new ConsigneeException(self::EXCEEDED_ADDRESSLINE1_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getAddressLine2()) > 35,
+            strlen((string) $address->getAddressLine2()) > 50,
             new ConsigneeException(self::EXCEEDED_ADDRESSLINE2_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getAddressLine3()) > 35,
+            strlen((string) $address->getAddressLine3()) > 50,
             new ConsigneeException(self::EXCEEDED_ADDRESSLINE3_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getCity()) > 35,
+            strlen((string) $address->getCity()) > 50,
             new ConsigneeException(self::EXCEEDED_CITY_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getState()) > 35,
+            strlen((string) $address->getState()) > 50,
             new ConsigneeException(self::EXCEEDED_STATE_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getZip()) > 35,
+            strlen((string) $address->getZip()) > 20,
             new ConsigneeException(self::EXCEEDED_ZIP_SIZE)
-        );
-
-        $this->assert(
-            $this->isCountryPermitted($address->getCountry()) === false,
-            new ConsigneeException(self::INVALID_COUNTRY)
         );
 
         $this->assert(
@@ -221,7 +194,7 @@ class PPLEUValidator extends ShippingValidatorHandler implements CountryListVali
         );
 
         $this->assert(
-            strlen((string) $address->getPhone()) > 15,
+            strlen($address->getPhone()) > 15,
             new ConsigneeException(self::INVALID_PHONE)
         );
     }
@@ -254,5 +227,22 @@ class PPLEUValidator extends ShippingValidatorHandler implements CountryListVali
             (int) $currentWeight > (int) $maxWeight,
             new ValidatorException(self::EXCEEDED_WEIGHT)
         );
+    }
+
+    protected function validateProducts(): void
+    {
+        $products = $this->object->getProducts();
+
+        foreach ($products as $key => $product) {
+            $productKey = 'product.' . $key;
+            $this->assert(
+                strlen((string) $product->getDescription()) > 105,
+                new ValidatorException($productKey . '.' . self::PRODUCT_EXCEEDED_DESCRIPTION_SIZE)
+            );
+            $this->assert(
+                strlen((string) $product->getHsCode()) > 6,
+                new ValidatorException($productKey . '.' . self::PRODUCT_EXCEEDED_HSCODE_SIZE)
+            );
+        }
     }
 }

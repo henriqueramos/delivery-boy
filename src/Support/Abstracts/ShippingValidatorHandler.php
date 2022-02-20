@@ -8,16 +8,27 @@ use HenriqueRamos\DeliveryBoy\Support\Interfaces\{
     Shippable,
     ShippingValidator
 };
+use Throwable;
 
 abstract class ShippingValidatorHandler implements ShippingValidator
 {
     protected $next;
 
-    public function next(ShippingValidator $handler): ShippingValidator
-    {
-        $this->next = $handler;
+    public $availableCountryStatesValidation = [
+        'AU' => 1,
+        'CA' => 1,
+        'US' => 1,
+    ];
 
-        return $this->next;
+    public function assert(
+        bool $assertion,
+        Throwable $e
+    ): void {
+        if (!$assertion) {
+            return;
+        }
+
+        throw $e;
     }
 
     public function handle(Shippable $object): ?Shippable
@@ -27,5 +38,12 @@ abstract class ShippingValidatorHandler implements ShippingValidator
         }
 
         return $this->next->handle($object);
+    }
+
+    public function next(ShippingValidator $handler): ShippingValidator
+    {
+        $this->next = $handler;
+
+        return $this->next;
     }
 }

@@ -26,7 +26,7 @@ use HenriqueRamos\DeliveryBoy\Support\Traits\{
     StateValidator
 };
 
-class PPLEUValidator extends ShippingValidatorHandler implements CountryListValidator, StateListValidator
+class RM2448SValidator extends ShippingValidatorHandler implements CountryListValidator, StateListValidator
 {
     use CountryValidator;
     use StateValidator;
@@ -34,20 +34,21 @@ class PPLEUValidator extends ShippingValidatorHandler implements CountryListVali
     protected $object;
 
     public const INVALID_ADDRESS_OBJECT = 'address.is.not.a.valid.type.object';
+    public const EXCEEDED_CONSIGNOR_COMPANY_NAME_SIZE = 'company.should.have.less.or.equal.than.25.characters';
     public const EXCEEDED_COMPANY_NAME_SIZE = 'company.should.have.less.or.equal.than.30.characters';
-    public const EXCEEDED_CONSIGNEE_COMPANY_NAME_SIZE = 'company.should.have.less.or.equal.than.35.characters';
     public const EXCEEDED_ADDRESS_NAME_SIZE = 'name.should.have.less.or.equal.than.30.characters';
-    public const EXCEEDED_ADDRESSLINE1_SIZE = 'addressLine1.should.have.less.or.equal.than.35.characters';
-    public const EXCEEDED_ADDRESSLINE2_SIZE = 'addressLine2.should.have.less.or.equal.than.35.characters';
-    public const EXCEEDED_ADDRESSLINE3_SIZE = 'addressLine3.should.have.less.or.equal.than.35.characters';
-    public const EXCEEDED_CITY_SIZE = 'city.should.have.less.or.equal.than.35.characters';
-    public const EXCEEDED_STATE_SIZE = 'state.should.have.less.or.equal.than.35.characters';
+    public const EXCEEDED_ADDRESSLINE1_SIZE = 'addressLine1.should.have.less.or.equal.than.30.characters';
+    public const EXCEEDED_ADDRESSLINE2_SIZE = 'addressLine2.should.have.less.or.equal.than.30.characters';
+    public const EXCEEDED_ADDRESSLINE3_SIZE = 'addressLine3.should.have.less.or.equal.than.30.characters';
+    public const EXCEEDED_CITY_SIZE = 'city.should.have.less.or.equal.than.30.characters';
+    public const EXCEEDED_STATE_SIZE = 'state.should.have.less.or.equal.than.30.characters';
     public const EXCEEDED_ZIP_SIZE = 'zip.should.have.less.or.equal.than.20.characters';
     public const INVALID_STATE = 'address.state.is.not.valid.for.this.country';
     public const INVALID_COUNTRY = 'address.country.is.not.available.for.this.service';
     public const EXCEEDED_WEIGHT = 'exceeded.weight';
     public const INVALID_DISPLAY_ID = 'displayId.should.have.less.or.equal.than.15.characters';
-    public const INVALID_PHONE = 'address.phone.should.have.less.or.equal.than.15.characters';
+    public const PRODUCT_EXCEEDED_DESCRIPTION_SIZE = 'description.should.have.less.or.equal.than.105.characteres';
+    public const PRODUCT_EXCEEDED_HSCODE_SIZE = 'hs_code.should.have.less.or.equal.than.6.characteres';
 
     public function handle(Shippable $object): ?Shippable
     {
@@ -68,30 +69,7 @@ class PPLEUValidator extends ShippingValidatorHandler implements CountryListVali
     public function availableCountriesList(): array
     {
         return [
-            'AT' => 1,
-            'BE' => 1,
-            'BG' => 1,
-            'HR' => 1,
-            'CY' => 1,
-            'CZ' => 1,
-            'DK' => 1,
-            'EE' => 1,
-            'FI' => 1,
-            'FR' => 1,
-            'DE' => 1,
-            'GR' => 1,
-            'HU' => 1,
-            'IE' => 1,
-            'LV' => 1,
-            'LT' => 1,
-            'LU' => 1,
-            'MT' => 1,
-            'NL' => 1,
-            'PL' => 1,
-            'RO' => 1,
-            'SK' => 1,
-            'SI' => 1,
-            'SE' => 1,
+            'GB' => 1,
         ];
     }
 
@@ -105,56 +83,43 @@ class PPLEUValidator extends ShippingValidatorHandler implements CountryListVali
         $address = $this->object->getConsignorAddress();
 
         $this->assert(
-            strlen((string) $address->getCompany()) > 30,
-            new ConsignorException(self::EXCEEDED_COMPANY_NAME_SIZE)
+            strlen((string) $address->getCompany()) > 25,
+            new ConsignorException(self::EXCEEDED_CONSIGNOR_COMPANY_NAME_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getName()) > 35,
+            strlen((string) $address->getName()) > 30,
             new ConsignorException(self::EXCEEDED_ADDRESS_NAME_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getAddressLine1()) > 35,
+            strlen((string) $address->getAddressLine1()) > 30,
             new ConsignorException(self::EXCEEDED_ADDRESSLINE1_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getAddressLine2()) > 35,
+            strlen((string) $address->getAddressLine2()) > 30,
             new ConsignorException(self::EXCEEDED_ADDRESSLINE2_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getAddressLine3()) > 35,
+            strlen((string) $address->getAddressLine3()) > 30,
             new ConsignorException(self::EXCEEDED_ADDRESSLINE3_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getCity()) > 35,
+            strlen((string) $address->getCity()) > 30,
             new ConsignorException(self::EXCEEDED_CITY_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getState()) > 35,
+            strlen((string) $address->getState()) > 30,
             new ConsignorException(self::EXCEEDED_STATE_SIZE)
         );
 
         $this->assert(
             strlen((string) $address->getZip()) > 20,
             new ConsignorException(self::EXCEEDED_ZIP_SIZE)
-        );
-
-        $this->assert(
-            $this->isStatePermitted(
-                $address->getState(),
-                $address->getCountry()
-            ) === false,
-            new ConsignorException(self::INVALID_STATE)
-        );
-
-        $this->assert(
-            strlen((string) $address->getPhone()) > 15,
-            new ConsignorException(self::INVALID_PHONE)
         );
     }
 
@@ -168,61 +133,48 @@ class PPLEUValidator extends ShippingValidatorHandler implements CountryListVali
         $address = $this->object->getConsigneeAddress();
 
         $this->assert(
-            strlen((string) $address->getCompany()) > 35,
-            new ConsigneeException(self::EXCEEDED_CONSIGNEE_COMPANY_NAME_SIZE)
+            strlen((string) $address->getCompany()) > 30,
+            new ConsigneeException(self::EXCEEDED_COMPANY_NAME_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getName()) > 35,
+            strlen((string) $address->getName()) > 30,
             new ConsigneeException(self::EXCEEDED_ADDRESS_NAME_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getAddressLine1()) > 35,
+            strlen((string) $address->getAddressLine1()) > 30,
             new ConsigneeException(self::EXCEEDED_ADDRESSLINE1_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getAddressLine2()) > 35,
+            strlen((string) $address->getAddressLine2()) > 30,
             new ConsigneeException(self::EXCEEDED_ADDRESSLINE2_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getAddressLine3()) > 35,
+            strlen((string) $address->getAddressLine3()) > 30,
             new ConsigneeException(self::EXCEEDED_ADDRESSLINE3_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getCity()) > 35,
+            strlen((string) $address->getCity()) > 30,
             new ConsigneeException(self::EXCEEDED_CITY_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getState()) > 35,
+            strlen((string) $address->getState()) > 30,
             new ConsigneeException(self::EXCEEDED_STATE_SIZE)
         );
 
         $this->assert(
-            strlen((string) $address->getZip()) > 35,
+            strlen((string) $address->getZip()) > 20,
             new ConsigneeException(self::EXCEEDED_ZIP_SIZE)
         );
 
         $this->assert(
             $this->isCountryPermitted($address->getCountry()) === false,
             new ConsigneeException(self::INVALID_COUNTRY)
-        );
-
-        $this->assert(
-            $this->isStatePermitted(
-                $address->getState(),
-                $address->getCountry()
-            ) === false,
-            new ConsigneeException(self::INVALID_STATE)
-        );
-
-        $this->assert(
-            strlen((string) $address->getPhone()) > 15,
-            new ConsigneeException(self::INVALID_PHONE)
         );
     }
 
@@ -238,7 +190,7 @@ class PPLEUValidator extends ShippingValidatorHandler implements CountryListVali
             $to
         );
 
-        $thresholdMaxWeight = '30'; // KG
+        $thresholdMaxWeight = '20'; // KG
 
         if ($from === WeightUnits::LB->value) {
             $thresholdMaxWeight = ceil($thresholdMaxWeight * 2.20462);
