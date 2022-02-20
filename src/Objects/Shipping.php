@@ -14,8 +14,13 @@ use HenriqueRamos\DeliveryBoy\Enums\{
     WeightUnits,
 };
 use HenriqueRamos\DeliveryBoy\Support\Abstracts\Hydrate;
+use HenriqueRamos\DeliveryBoy\Support\Interfaces\{
+    Addressable,
+    Baggable,
+    Shippable,
+};
 
-final class Shipping extends Hydrate
+final class Shipping extends Hydrate implements Shippable
 {
     public const SOURCE_DEFAULT = 'DeliveryBoy';
 
@@ -42,9 +47,9 @@ final class Shipping extends Hydrate
 
     public function toArray(): array
     {
-        $data = [
-            'ConsigneeAddress' => $this->getConsignorAddress(),
-            'ConsignorAddress' => $this->getConsigneeAddress(),
+        return [
+            'ConsigneeAddress' => $this->getConsigneeAddressRepresentation(),
+            'ConsignorAddress' => $this->getConsignorAddressRepresentation(),
             'Currency' => $this->getCurrency(),
             'CustomsDuty' => $this->getCustomsDuty(),
             'DeclarationType' => $this->getDeclarationType(),
@@ -55,7 +60,7 @@ final class Shipping extends Hydrate
             'InvoiceNumber' => $this->getInvoiceNumber(),
             'LabelFormat' => $this->getLabelFormat(),
             'Length' => $this->getLength(),
-            'Products' => null,
+            'Products' => $this->getProductsRepresentation(),
             'Service' => $this->getService(),
             'ShipperReference' => $this->getShipperReference(),
             'Source' => $this->getSource(),
@@ -64,43 +69,42 @@ final class Shipping extends Hydrate
             'WeightUnit' => $this->getWeightUnit(),
             'Width' => $this->getWidth(),
         ];
-
-        if ($this->getConsignorAddress() instanceof Address) {
-            $data['ConsignorAddress'] = $this->getConsignorAddress()
-                ->toArray();
-        }
-
-        if ($this->getConsigneeAddress() instanceof Address) {
-            $data['ConsigneeAddress'] = $this->getConsigneeAddress()
-                ->toArray();
-        }
-
-        if ($this->getProducts() instanceof ProductsBag) {
-            $data['Products'] = $this->getProducts()
-                ->toArray();
-        }
-
-        return $data;
     }
 
-    public function getConsignorAddress(): ?Address
+    public function isShippable(): bool
+    {
+        return ($this->height !== null) &&
+            ($this->width !== null) &&
+            ($this->length !== null) &&
+            ($this->weight !== null);
+    }
+
+    public function isNotShippable(): bool
+    {
+        return ($this->height === null) ||
+            ($this->width === null) ||
+            ($this->length === null) ||
+            ($this->weight === null);
+    }
+
+    public function getConsignorAddress(): ?Addressable
     {
         return $this->consignorAddress;
     }
 
-    public function setConsignorAddress(?Address $consignorAddress = null): self
+    public function setConsignorAddress(?Addressable $consignorAddress = null): self
     {
         $this->consignorAddress = $consignorAddress;
 
         return $this;
     }
 
-    public function getConsigneeAddress(): ?Address
+    public function getConsigneeAddress(): ?Addressable
     {
         return $this->consigneeAddress;
     }
 
-    public function setConsigneeAddress(?Address $consigneeAddress = null): self
+    public function setConsigneeAddress(?Addressable $consigneeAddress = null): self
     {
         $this->consigneeAddress = $consigneeAddress;
 
@@ -248,12 +252,12 @@ final class Shipping extends Hydrate
         return $this;
     }
 
-    public function getProducts(): ?ProductsBag
+    public function getProducts(): ?Baggable
     {
         return $this->products;
     }
 
-    public function setProducts(?ProductsBag $products = null): self
+    public function setProducts(?Baggable $products = null): self
     {
         $this->products = $products;
 
@@ -350,5 +354,34 @@ final class Shipping extends Hydrate
         $this->width = $width;
 
         return $this;
+    }
+
+    protected function getProductsRepresentation(): ?array
+    {
+        if ($this->getProducts() instanceof ProductsBag) {
+            return $this->getProducts()->toArray();
+        }
+
+        return $this->getProducts();
+    }
+
+    protected function getConsigneeAddressRepresentation(): ?array
+    {
+        if ($this->getConsigneeAddress() instanceof Addressable) {
+            return $this->getConsigneeAddress()
+                ->toArray();
+        }
+
+        return $this->getConsigneeAddress();
+    }
+
+    protected function getConsignorAddressRepresentation(): ?array
+    {
+        if ($this->getConsignorAddress() instanceof Addressable) {
+            return $this->getConsignorAddress()
+                ->toArray();
+        }
+
+        return $this->getConsignorAddress();
     }
 }

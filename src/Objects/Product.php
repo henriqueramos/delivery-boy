@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace HenriqueRamos\DeliveryBoy\Objects;
 
 use HenriqueRamos\DeliveryBoy\Support\Abstracts\Hydrate;
+use HenriqueRamos\DeliveryBoy\Support\Interfaces\Inventoriable;
 
-final class Product extends Hydrate
+final class Product extends Hydrate implements Inventoriable
 {
     protected $description = null;
     protected $hsCode = null;

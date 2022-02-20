@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace HenriqueRamos\DeliveryBoy\Objects;
 
 use HenriqueRamos\DeliveryBoy\Support\Abstracts\Hydrate;
+use HenriqueRamos\DeliveryBoy\Support\Interfaces\Addressable;
 
-class Address extends Hydrate
+class Address extends Hydrate implements Addressable
 {
     protected $addressLine1 = null;
     protected $addressLine2 = null;

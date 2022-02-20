@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace HenriqueRamos\DeliveryBoy\Objects;
 
 use HenriqueRamos\DeliveryBoy\Support\Abstracts\Hydrate;
-use HenriqueRamos\DeliveryBoy\Support\Interfaces\Enumerable;
+use HenriqueRamos\DeliveryBoy\Support\Interfaces\{
+    Baggable,
+    Inventoriable
+};
 
-final class ProductsBag extends Hydrate implements Enumerable
+final class ProductsBag extends Hydrate implements Baggable
 {
     protected $products = [];
 
@@ -57,7 +60,7 @@ final class ProductsBag extends Hydrate implements Enumerable
         return $this;
     }
 
-    public function addProduct(Product $product = null): self
+    public function addProduct(Inventoriable $product = null): self
     {
         $this->products[] = $product;
 

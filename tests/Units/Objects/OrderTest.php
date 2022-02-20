@@ -46,8 +46,8 @@ final class OrderTest extends TestCase
         ]);
 
         $shipping = new Shipping([
-            'ConsigneeAddress' => $this->getConsigneeAddress('Bartholomew Jojo Simpson'),
-            'ConsignorAddress' => $this->getConsignorAddress('Homer J. Simpson'),
+            'ConsigneeAddress' => $this->getConsigneeAddressFixture('Bartholomew Jojo Simpson'),
+            'ConsignorAddress' => $this->getConsignorAddressFixture('Homer J. Simpson'),
             'Currency' => Currency::BRAZILIAN_REAL,
             'CustomsDuty' => CustomsDuties::DDP,
             'DeclarationType' => ShippingDeclarationType::GIFT,
@@ -97,6 +97,7 @@ final class OrderTest extends TestCase
                     'AddressLine1' => 'Walnut Street',
                     'AddressLine2' => 'Moe\'s Tavern',
                     'City' => 'Springfield',
+                    'Company' => 'Moe\'s Tavern',
                     'State' => 'MO',
                     'Country' => 'US',
                     'Zip' => '65619',
@@ -182,7 +183,7 @@ final class OrderTest extends TestCase
         ]);
     }
 
-    protected function getConsigneeAddress(string $name): Address
+    protected function getConsigneeAddressFixture(string $name): Address
     {
         return new Address([
             'Name' => $name,
@@ -197,19 +198,20 @@ final class OrderTest extends TestCase
         ]);
     }
 
-    protected function getConsignorAddress(string $name): Address
+    protected function getConsignorAddressFixture(string $name): Address
     {
         return new SenderAddress([
             'Name' => $name,
             'AddressLine1' => 'Walnut Street',
             'AddressLine2' => 'Moe\'s Tavern',
             'City' => 'Springfield',
-            'State' => 'MO',
+            'Company' => 'Moe\'s Tavern',
             'Country' => 'US',
-            'Zip' => '65619',
-            'Phone' => '(939)-555-1743',
             'Email' => 'homer.da.best.simpson@springfieldnuclearpowerplant.test',
             'Eori' => '12345678',
+            'Phone' => '(939)-555-1743',
+            'State' => 'MO',
+            'Zip' => '65619',
         ]);
     }
 }
