@@ -11,6 +11,7 @@ final class SpringTest extends TestCase
 {
     public function testServiceSpringUriGetter(): void
     {
+        putenv('API_URL=http://localhost/');
         $service = new Spring();
 
         $this->assertEquals('http://localhost/', $service->getUri());
