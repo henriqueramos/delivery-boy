@@ -8,6 +8,7 @@ use HenriqueRamos\DeliveryBoy\Enums\ShippingServices;
 use HenriqueRamos\DeliveryBoy\Exceptions\UndefinedValidator;
 use HenriqueRamos\DeliveryBoy\Support\Interfaces\Shippable;
 use HenriqueRamos\DeliveryBoy\Validators\{
+    BaseValidator,
     HEHDSValidator,
     ITCRValidator,
     PPLEUValidator,
@@ -28,7 +29,9 @@ class ShippableValidator
     {
         $service = $object->getService();
 
-        $validator = match ($service) {
+        $validator = new BaseValidator();
+
+        $serviceValidator = match ($service) {
             ShippingServices::PPLEU->value => new PPLEUValidator(),
             ShippingServices::PPLGE->value => new PPLGEGUValidator(),
             ShippingServices::PPLGU->value => new PPLGEGUValidator(),
@@ -53,6 +56,8 @@ class ShippableValidator
             ShippingServices::PPHDS->value => new PPNHDSDSHValidator(),
             default => throw new UndefinedValidator(self::CANNOT_FIND_VALIDATOR_FOR_SHIPPABLE),
         };
+
+        $validator->next($serviceValidator);
 
         return $validator->handle($object);
     }
