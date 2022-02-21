@@ -16,15 +16,15 @@ use HenriqueRamos\DeliveryBoy\Enums\{
 };
 use HenriqueRamos\DeliveryBoy\Objects\{
     Address,
-    Order,
     Product,
     ProductsBag,
     SenderAddress,
     Shipping,
+    SpringEnvelope,
 };
 use HenriqueRamosTests\TestCase;
 
-final class OrderTest extends TestCase
+final class SpringEnvelopeTest extends TestCase
 {
     public function testOrderObjectTestWithBasicData(): void
     {
@@ -68,7 +68,7 @@ final class OrderTest extends TestCase
             'Products' => $products,
         ]);
 
-        $product = new Order([
+        $product = new SpringEnvelope([
             'apiKey' => 'ABC',
             'command' => ResourcesCommands::ORDER_SHIPMENT,
             'shipping' => $shipping,
@@ -77,9 +77,9 @@ final class OrderTest extends TestCase
         $actual = $product->toArray();
 
         $expected = [
-            'ApiKey' => 'ABC',
+            'Apikey' => 'ABC',
             'Command' => ResourcesCommands::ORDER_SHIPMENT->value,
-            'Shipping' => [
+            'Shipment' => [
                 'ConsigneeAddress' => [
                     'Name' => 'Bartholomew Jojo Simpson',
                     'AddressLine1' => '742 Evergreen Terrace',
@@ -151,13 +151,13 @@ final class OrderTest extends TestCase
 
     public function testOrderWithEmptyInput(): void
     {
-        $product = new Order([]);
+        $product = new SpringEnvelope([]);
 
         $actual = $product->toArray();
         $expected = [
-            'ApiKey' => null,
+            'Apikey' => null,
             'Command' => null,
-            'Shipping' => null,
+            'Shipment' => null,
         ];
 
         $this->assertEquals($expected, $actual);

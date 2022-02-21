@@ -8,7 +8,7 @@ use HenriqueRamos\DeliveryBoy\Enums\ResourcesCommands;
 use HenriqueRamos\DeliveryBoy\Support\Abstracts\Hydrate;
 use HenriqueRamos\DeliveryBoy\Support\Interfaces\Arrayable;
 
-final class Order extends Hydrate
+final class SpringEnvelope extends Hydrate
 {
     protected $apiKey = null;
     protected $command = null;
@@ -17,9 +17,9 @@ final class Order extends Hydrate
     public function toArray(): array
     {
         return [
-            'ApiKey' => $this->getApiKey(),
+            'Apikey' => $this->getApiKey(),
             'Command' => $this->getCommand(),
-            'Shipping' => $this->getShippingRepresentation(),
+            'Shipment' => $this->getShippingRepresentation(),
         ];
     }
 
@@ -51,12 +51,12 @@ final class Order extends Hydrate
         return $this;
     }
 
-    public function getShipping(): ?Shipping
+    public function getShipping(): ?Arrayable
     {
         return $this->shipping;
     }
 
-    public function setShipping(?Shipping $shipping = null): self
+    public function setShipping(?Arrayable $shipping = null): self
     {
         $this->shipping = $shipping;
 
