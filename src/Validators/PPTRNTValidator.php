@@ -10,10 +10,6 @@ use HenriqueRamos\DeliveryBoy\Exceptions\{
     ConsignorException,
     ValidatorException
 };
-use HenriqueRamos\DeliveryBoy\Objects\{
-    Address,
-    SenderAddress
-};
 use HenriqueRamos\DeliveryBoy\Support\Abstracts\ShippingValidatorHandler;
 use HenriqueRamos\DeliveryBoy\Support\Converter;
 use HenriqueRamos\DeliveryBoy\Support\Interfaces\{
@@ -70,11 +66,6 @@ class PPTRNTValidator extends ShippingValidatorHandler implements CountryListVal
 
     protected function validateConsignorData(): void
     {
-        $this->assert(
-            !($this->object->getConsignorAddress() instanceof SenderAddress),
-            new ConsignorException(self::INVALID_ADDRESS_OBJECT)
-        );
-
         $address = $this->object->getConsignorAddress();
 
         $this->assert(
@@ -133,11 +124,6 @@ class PPTRNTValidator extends ShippingValidatorHandler implements CountryListVal
 
     protected function validateConsigneeData(): void
     {
-        $this->assert(
-            !($this->object->getConsigneeAddress() instanceof Address),
-            new ConsigneeException(self::INVALID_ADDRESS_OBJECT)
-        );
-
         $address = $this->object->getConsigneeAddress();
 
         $this->assert(
