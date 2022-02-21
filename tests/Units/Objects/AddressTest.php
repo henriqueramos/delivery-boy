@@ -51,6 +51,7 @@ final class AddressTest extends TestCase
             'Name' => 'Homer J. Simpson',
             'AddressLine1' => '742 Evergreen Terrace',
             'AddressLine2' => 'Residential Zone',
+            'AddressLine3' => 'Tree house',
             'City' => 'Springfield',
             'State' => 'MO',
             'Country' => 'US',
@@ -58,6 +59,7 @@ final class AddressTest extends TestCase
             'Phone' => '(939)-555-0113',
             'Email' => 'homer.da.best.simpson@springfieldnuclearpowerplant.test',
             'Eori' => 'GB205672212000',
+            'Vat' => '123',
         ]);
 
         $actual = $address->toArray();
@@ -66,14 +68,14 @@ final class AddressTest extends TestCase
             'Name' => 'Homer J. Simpson',
             'AddressLine1' => '742 Evergreen Terrace',
             'AddressLine2' => 'Residential Zone',
-            'AddressLine3' => null,
+            'AddressLine3' => 'Tree house',
             'City' => 'Springfield',
             'State' => 'MO',
             'Country' => 'US',
             'Zip' => '65619',
             'Phone' => '(939)-555-0113',
             'Email' => 'homer.da.best.simpson@springfieldnuclearpowerplant.test',
-            'Vat' => null,
+            'Vat' => '123',
             'Eori' => 'GB205672212000',
         ];
 
