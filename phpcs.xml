@@ -17,6 +17,7 @@
         <exclude-pattern>src/Enums/*</exclude-pattern>
     </rule>
     <rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly">
+        <exclude-pattern>examples/*</exclude-pattern>
         <properties>
             <property name="allowFallbackGlobalConstants" value="true"/>
             <property name="allowFallbackGlobalFunctions" value="true"/>
@@ -30,6 +31,7 @@
         </properties>
     </rule>
     <rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators" />
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses"/>
     <rule ref="Squiz.Classes.ClassFileName.NoMatch" />
     <rule ref="PSR12" />
 </ruleset>
