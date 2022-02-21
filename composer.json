@@ -36,6 +36,7 @@
     },
     "scripts": {
         "phpcs": [
+          "@php vendor/bin/phpcs --extensions=php --encoding=utf-8 --tab-width=4 -sp examples",
           "@php vendor/bin/phpcs --extensions=php --encoding=utf-8 --tab-width=4 -sp src",
           "@php vendor/bin/phpcs --extensions=php --encoding=utf-8 --tab-width=4 -sp tests"
         ],

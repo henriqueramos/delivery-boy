@@ -4,36 +4,80 @@ declare(strict_types=1);
 
 namespace HenriqueRamos\DeliveryBoy\Services;
 
-use CurlHandle;
+use HenriqueRamos\DeliveryBoy\Enums\ResourcesCommands;
+use HenriqueRamos\DeliveryBoy\Exceptions\SpringException;
 use HenriqueRamos\DeliveryBoy\Support\Http\Client;
-use InvalidArgumentException;
 
 final class Spring
 {
     protected $client = null;
+    protected $command = null;
     protected $payload = null;
-    protected $uri = null;
 
     public function __construct()
     {
-        if (($apiUri = getenv('API_URL')) === false) {
-            throw new InvalidArgumentException('fill.API_URL.env');
-        }
-
-        $this->setUri($apiUri);
-        $this->client = new Client($this->getUri());
+        $this->client = new Client();
     }
 
-    public function post(): array
+    public function doPost(): string
     {
-        $request = $this->client->prepareRequest();
+        $response = $this->client->doPost($this->getPayload());
 
-        curl_setopt($request, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($request, CURLOPT_POSTFIELDS, $this->getPayload());
+        return $this->parseResponse($response);
+    }
 
-        $result = $this->client->doRequest($request);
+    public function parseResponse(string $response): string
+    {
+        $parsed = json_decode($response, true);
+
+        if (
+            !isset($parsed['ErrorLevel']) ||
+            !isset($parsed['Error'])
+        ) {
+            throw new SpringException('invalid.response.from.3rd.party');
+        }
+
+        $errorLevel = $parsed['ErrorLevel'];
+        $errorMessage = $parsed['Error'];
+
+        if (
+            $errorLevel === 10 ||
+            ($errorLevel !== 1 && $errorLevel !== 0)
+        ) {
+            throw new SpringException($errorMessage, $errorLevel);
+        }
+
+        $result = match ($this->command) {
+            ResourcesCommands::ORDER_SHIPMENT => $this->parseTrackingNumber($parsed),
+            ResourcesCommands::GET_SHIPMENT_LABEL => $this->parseLabel($parsed),
+            default => $this->parseTrackingNumber($parsed),
+        };
 
         return $result;
+    }
+
+    public function parseTrackingNumber(array $parsed): string
+    {
+        if (
+            !isset($parsed['Shipment']) ||
+            !isset($parsed['Shipment']['TrackingNumber'])
+        ) {
+            throw new SpringException('could.not.found.tracking.number');
+        }
+
+        return (string) $parsed['Shipment']['TrackingNumber'];
+    }
+
+    public function parseLabel(array $parsed): string
+    {
+        if (
+            !isset($parsed['Shipment']) ||
+            !isset($parsed['Shipment']['LabelImage'])
+        ) {
+            throw new SpringException('could.not.found.label');
+        }
+
+        return (string) $parsed['Shipment']['LabelImage'];
     }
 
     public function getPayload(): ?string
@@ -48,14 +92,9 @@ final class Spring
         return $this;
     }
 
-    public function getUri(): ?string
+    public function setCommand(?ResourcesCommands $command = null): self
     {
-        return $this->uri;
-    }
-
-    public function setUri(?string $uri = null): self
-    {
-        $this->uri = $uri;
+        $this->command = $command;
 
         return $this;
     }
