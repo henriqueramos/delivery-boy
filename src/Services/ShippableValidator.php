@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace HenriqueRamos\DeliveryBoy\Services;
 
-use InvalidArgumentException;
 use HenriqueRamos\DeliveryBoy\Enums\ShippingServices;
+use HenriqueRamos\DeliveryBoy\Exceptions\UndefinedValidator;
 use HenriqueRamos\DeliveryBoy\Support\Interfaces\Shippable;
 use HenriqueRamos\DeliveryBoy\Validators\{
     HEHDSValidator,
     ITCRValidator,
     PPLEUValidator,
     PPLGEGUValidator,
+    PPNHDSDSHValidator,
     PPTRNTValidator,
     PPTTValidator,
     RM2448SValidator,
@@ -46,7 +47,11 @@ class ShippableValidator
             ShippingServices::SCSTS->value => new SCSTSEXSValidator(),
             ShippingServices::SCEX->value => new SCSTSEXSValidator(),
             ShippingServices::SCEXS->value => new SCSTSEXSValidator(),
-            default => throw new InvalidArgumentException(self::CANNOT_FIND_VALIDATOR_FOR_SHIPPABLE),
+            ShippingServices::PPND->value => new PPNHDSDSHValidator(),
+            ShippingServices::PPNDS->value => new PPNHDSDSHValidator(),
+            ShippingServices::PPHD->value => new PPNHDSDSHValidator(),
+            ShippingServices::PPHDS->value => new PPNHDSDSHValidator(),
+            default => throw new UndefinedValidator(self::CANNOT_FIND_VALIDATOR_FOR_SHIPPABLE),
         };
 
         return $validator->handle($object);
