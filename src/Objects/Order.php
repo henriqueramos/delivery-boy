@@ -6,6 +6,7 @@ namespace HenriqueRamos\DeliveryBoy\Objects;
 
 use HenriqueRamos\DeliveryBoy\Enums\ResourcesCommands;
 use HenriqueRamos\DeliveryBoy\Support\Abstracts\Hydrate;
+use HenriqueRamos\DeliveryBoy\Support\Interfaces\Arrayable;
 
 final class Order extends Hydrate
 {
@@ -15,18 +16,11 @@ final class Order extends Hydrate
 
     public function toArray(): array
     {
-        $data = [
+        return [
             'ApiKey' => $this->getApiKey(),
             'Command' => $this->getCommand(),
-            'Shipping' => $this->getShipping(),
+            'Shipping' => $this->getShippingRepresentation(),
         ];
-
-        if ($this->getShipping() instanceof Shipping) {
-            $data['Shipping'] = $this->getShipping()
-                ->toArray();
-        }
-
-        return $data;
     }
 
     public function getApiKey(): ?string
@@ -67,5 +61,14 @@ final class Order extends Hydrate
         $this->shipping = $shipping;
 
         return $this;
+    }
+
+    protected function getShippingRepresentation(): ?array
+    {
+        if ($this->getShipping() instanceof Arrayable) {
+            return $this->getShipping()->toArray();
+        }
+
+        return $this->getShipping();
     }
 }
